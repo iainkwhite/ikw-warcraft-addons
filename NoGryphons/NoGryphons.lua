@@ -1,0 +1,3 @@
+
+MainMenuBarLeftEndCap:Hide();
+MainMenuBarRightEndCap:Hide();

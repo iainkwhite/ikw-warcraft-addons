@@ -1,0 +1,7 @@
+## Interface: 60200
+## Author: Manacell
+## Title: SpellID
+## Version: 1 
+## Notes: Get Spell name from ID
+
+SpellID.lua

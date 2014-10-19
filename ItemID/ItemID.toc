@@ -1,0 +1,6 @@
+## Interface: 60200
+## Author: Manacell
+## Title: ItemID
+## Version: 1 
+## Notes: Get Item name from ID.  Also add ID and ilvl to tooltips
+ItemID.lua
