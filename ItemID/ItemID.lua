@@ -1,7 +1,7 @@
 SLASH_ITEMID1="/itemid"
 
 SlashCmdList["ITEMID"]=function(msg) local name,link,quality,ilevel=GetItemInfo(msg) 
-  if link then ChatFrame1:AddMessage("/ItemID: "..link.."  Id: "..link:match("item:(%d+)").."  ilvl: "..(ilevel or "-")) 
+  if link then ChatFrame1:AddMessage("/ItemID: "..link.."  Id: "..link:match("item:(%d+)").."  Base ilvl: "..(ilevel or "-")) 
   else ChatFrame1:AddMessage("/ItemID: No match")
   end 
 end
@@ -13,7 +13,7 @@ function addline_itemid()
 		local itemString = string.match(itemLink, "item[%-?%d:]+")
 		local _, itemId, junk = strsplit(":", itemString)
 		local _, _, quality, ilevel = GetItemInfo(itemId)
-		ItemRefTooltip:AddLine("ItemID: |cFFFFFFFF"..itemId.."|cFFFFFF00  ilevel: |cFFFFFFFF"..(ilevel or "-"))
+		ItemRefTooltip:AddLine("ItemID: |cFFFFFFFF"..itemId.."|cFFFFFF00  Base ilevel: |cFFFFFFFF"..(ilevel or "-"))
 		ItemRefTooltip:Show();
 	end
 end
@@ -24,7 +24,7 @@ function addline_gametip()
 		local itemString = string.match(itemLink, "item[%-?%d:]+")
 		local _, itemId, junk = strsplit(":", itemString)
 		local _, _, quality, ilevel = GetItemInfo(itemId)
-		GameTooltip:AddLine("ItemID: |cFFFFFFFF"..itemId.."|cFFFFFF00  ilevel: |cFFFFFFFF"..(ilevel or "-"))
+		GameTooltip:AddLine("ItemID: |cFFFFFFFF"..itemId.."|cFFFFFF00  Base ilevel: |cFFFFFFFF"..(ilevel or "-"))
 		GameTooltip:Show();
 	end
 end
