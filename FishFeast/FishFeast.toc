@@ -1,0 +1,7 @@
+## Interface: 60100
+## Author: Manacell
+## Title: FishFeast
+## Version: 1.5 
+## Notes: Announces when a Fish Feast or other buff item is created 
+
+FishFeast.lua
