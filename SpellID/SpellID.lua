@@ -5,6 +5,3 @@ SlashCmdList["SPELLID"]=function(msg) local link,tradelink=GetSpellLink(msg)
   else ChatFrame1:AddMessage("/SpellID: No match")
   end 
 end
-
-
-
