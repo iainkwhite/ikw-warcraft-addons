@@ -1,4 +1,4 @@
-## Interface: 60300
+## Interface: 70200
 ## Author: Manacell
 ## Title: ItemID
 ## Version: 1 
