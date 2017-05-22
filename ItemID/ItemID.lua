@@ -15,7 +15,7 @@ function addline_itemid()
 		if itemId then
 			local _, _, quality, ilevel = GetItemInfo(itemId)
 			ItemRefTooltip:AddLine("ItemID: |cFFFFFFFF"..itemId.."|cFFFFFF00  Base ilevel: |cFFFFFFFF"..(ilevel or "-"))
-		else ItemRefTooltip:AddLine("No ItemID")
+		else ItemRefTooltip:AddLine("ItemID: |cFFFFFFFF None |cFFFFFF00" )
 		end
 		ItemRefTooltip:Show();
 	end
@@ -29,7 +29,7 @@ function addline_gametip()
 		if itemId then
 			local _, _, quality, ilevel = GetItemInfo(itemId)
 			GameTooltip:AddLine("ItemID: |cFFFFFFFF"..itemId.."|cFFFFFF00  Base ilevel: |cFFFFFFFF"..(ilevel or "-"))
-		else GameTooltip:AddLine("No ItemID") 
+		else GameTooltip:AddLine("ItemID: |cFFFFFFFF None |cFFFFFF00") 
 		end
 		GameTooltip:Show();
 	end
