@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 70200
 ## Title: No Gryphons
 ## Notes: Hides the Gryphons on the sides of the action bar.
 NoGryphons.lua
