@@ -113,7 +113,7 @@ function Coordinates_UpdateCoordinates()
 		else
 			MinimapZoneText:SetText(GetMinimapZoneText())
 		end
-		MinimapZoneText:SetFont(fontStyle, 10, fontOutline)
+		MinimapZoneText:SetFont(fontStyle, 9, fontOutline)
 	end
 
 	--WorldMapCoordinates
