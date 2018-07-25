@@ -1,4 +1,5 @@
-## Interface: 70200
+## Interface: 80100
 ## Title: No Gryphons
+## Author: Manafish
 ## Notes: Hides the Gryphons on the sides of the action bar.
 NoGryphons.lua
