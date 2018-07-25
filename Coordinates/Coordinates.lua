@@ -1,5 +1,6 @@
 -- Coordinates
--- By Szandos
+-- Updated for 8.1
+-- Previous versions by Szandos
 
 --Variables
 local Coordinates_UpdateInterval = 0.2
@@ -17,11 +18,6 @@ Coordinates_eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 Coordinates_eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 Coordinates_eventFrame:RegisterEvent("ZONE_CHANGED")
 Coordinates_eventFrame:SetScript("OnEvent",function(self,event,...) self[event](self,event,...);end)
-
--- Andtext for the world map
-Coordinates_worldMapText = WorldMapButton:CreateFontString()
-Coordinates_worldMapText:SetTextColor(1,1,.25,1)
-Coordinates_worldMapText:SetPoint("BOTTOM", WorldMapButton, "BOTTOM", 0, 3)
 
 -- Create slash command
 SLASH_COORDINATES1 = "/coordinates"
@@ -50,22 +46,19 @@ function SlashCmdList.COORDINATES(msg)
 		end
 	elseif (command == "size" or command =="fontsize") then
 		rest = tonumber(rest)
-		if rest then
+		if rest >= 6 and rest <= 15 then
 			CoordinatesDB["fontSize"] = rest
-			local scale = WorldMapDetailFrame:GetEffectiveScale()
-			local scaledFontSize = CoordinatesDB["fontSize"] / scale
-			Coordinates_worldMapText:SetFont(fontStyle, scaledFontSize, fontOutline)
 			DEFAULT_CHAT_FRAME:AddMessage(color.."Coordinates: Font size set to "..CoordinatesDB["fontSize"])
 		else
-			DEFAULT_CHAT_FRAME:AddMessage(color.."Coordinates: Invalid font size")
+			DEFAULT_CHAT_FRAME:AddMessage(color.."Coordinates: Invalid font size - must be between 6 and 15")
 		end
 	else
-		DEFAULT_CHAT_FRAME:AddMessage(color.."Coordinates by Szandos")
+		DEFAULT_CHAT_FRAME:AddMessage(color.."Coordinates")
 		DEFAULT_CHAT_FRAME:AddMessage(color.."Version: "..GetAddOnMetadata("Coordinates", "Version"))
 		DEFAULT_CHAT_FRAME:AddMessage(color.."Usage:")
 		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates worldmap - Enable/disable coordinates on the world map")
-		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates minimap - Enable/disable coordinates on the mini map")
-		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates fontsize <size> - Sets the size of the world map font")
+		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates minimap - Enable/disable coordinates on the mini-map")
+		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates fontsize <size> - Sets the size of the mini-map font")
 	end
 end
 
@@ -75,9 +68,9 @@ function Coordinates_eventFrame:VARIABLES_LOADED()
 		CoordinatesDB = {}
 		CoordinatesDB["worldmap"] = true
 		CoordinatesDB["minimap"] = true
-		CoordinatesDB["fontSize"] = 10
+		CoordinatesDB["fontSize"] = 9
 	elseif not CoordinatesDB["fontSize"] then
-		CoordinatesDB["fontSize"] = 10
+		CoordinatesDB["fontSize"] = 9
 	end
 	Coordinates_eventFrame:SetScript("OnUpdate", function(self, elapsed) Coordinates_OnUpdate(self, elapsed) end)
 end
@@ -106,48 +99,50 @@ end
 
 function Coordinates_UpdateCoordinates()
 	--MinimapCoordinates
+	local mapID
+	local position
 	if (CoordinatesDB["minimap"] and Minimap:IsVisible()) then
-		local px, py = GetPlayerMapPosition("player")
-		if (px and py) then
-			MinimapZoneText:SetText(format("(%d:%d)  ",px*100.0,py*100.0)..GetMinimapZoneText())
-		else
-			MinimapZoneText:SetText(GetMinimapZoneText())
+		mapID = C_Map.GetBestMapForUnit("player")
+		if (mapID) then
+			position = C_Map.GetPlayerMapPosition(mapID,"player")
+			if (position and position.x ~= 0 and position.y ~= 0 ) then
+				MinimapZoneText:SetText( format("(%d:%d) ",position.x*100.0,position.y*100.0) .. GetMinimapZoneText() );
+			end
+			MinimapZoneText:SetFont(fontStyle, CoordinatesDB["fontSize"], fontOutline)
 		end
-		MinimapZoneText:SetFont(fontStyle, 9, fontOutline)
 	end
 
 	--WorldMapCoordinates
  	if (CoordinatesDB["worldmap"] and WorldMapFrame:IsVisible()) then
- 		-- Get the cursor's coordinates
- 		local cursorX, cursorY = GetCursorPosition()
-		
-		-- Map calculations
- 		local scale = WorldMapDetailFrame:GetEffectiveScale()
- 		cursorX = cursorX / scale
- 		cursorY = cursorY / scale
- 		local width = WorldMapDetailFrame:GetWidth()
- 		local height = WorldMapDetailFrame:GetHeight()
-		local left = WorldMapDetailFrame:GetLeft()
-		local top = WorldMapDetailFrame:GetTop()
+		-- Get the cursor's coordinates
+		local cursorX, cursorY = GetCursorPosition()
+
+		-- Calculate cursor position
+		local scale = WorldMapFrame:GetCanvas():GetEffectiveScale()
+		cursorX = cursorX / scale
+		cursorY = cursorY / scale
+		local width = WorldMapFrame:GetCanvas():GetWidth()
+		local height = WorldMapFrame:GetCanvas():GetHeight()
+		local left = WorldMapFrame:GetCanvas():GetLeft()
+		local top = WorldMapFrame:GetCanvas():GetTop()
 		cursorX = (cursorX - left) / width * 100
 		cursorY = (top - cursorY) / height * 100
- 		local worldmapCoordsText = "Cursor(X,Y): "..format("%.1f , %.1f   ", cursorX, cursorY)
-		
+		local worldmapCoordsText = "Cursor(X,Y): "..format("%.1f , %.1f    ", cursorX, cursorY)
 		-- Player position
-		local px, py = GetPlayerMapPosition("player")
- 		if (px and py) then
- 			worldmapCoordsText = worldmapCoordsText.." Player(X,Y): "..format("%.1f , %.1f", px * 100, py * 100)
- 		else
- 			worldmapCoordsText = worldmapCoordsText.." Player(X,Y): n/a"
- 		end
-		
+		if (not mapID) then
+			mapID = C_Map.GetBestMapForUnit("player")
+		end
+		if (mapID) then
+			position = C_Map.GetPlayerMapPosition(mapID,"player")
+		end
+		if (position and position.x ~= 0 and position.y ~= 0 ) then
+			worldmapCoordsText = worldmapCoordsText.." Player(X,Y): "..format("%.1f , %.1f", position.x * 100, position.y * 100)
+		else
+			worldmapCoordsText = worldmapCoordsText.." Player(X,Y): n/a"
+		end
 		-- Add text to world map
-		local scaledFontSize = CoordinatesDB["fontSize"] / scale
-		Coordinates_worldMapText:SetFont(fontStyle, scaledFontSize, fontOutline)
-		Coordinates_worldMapText:SetText(worldmapCoordsText)
-	end
-	if ((not CoordinatesDB["worldmap"]) and WorldMapFrame:IsVisible()) then
-		Coordinates_worldMapText:SetFont(fontStyle, CoordinatesDB["fontSize"], fontOutline)
-		Coordinates_worldMapText:SetText("")
+		WorldMapFrame.BorderFrame.TitleText:SetText(worldmapCoordsText)
+	elseif (WorldMapFrame:IsVisible()) then
+		WorldMapFrame.BorderFrame.TitleText:SetText(MAP_AND_QUEST_LOG)
 	end
 end

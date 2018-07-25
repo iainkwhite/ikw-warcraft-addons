@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 80100
 ## Title: Coordinates
 
-## Version: 7.2 
-## Author: Szandos
+## Version: 8.1 
+## Author: Various
 ## Notes: Adds coordinates to the minimap and the world map
 ## SavedVariables: CoordinatesDB
 
