@@ -125,8 +125,8 @@ function Coordinates_UpdateCoordinates()
 		local height = WorldMapFrame:GetCanvas():GetHeight()
 		local left = WorldMapFrame:GetCanvas():GetLeft()
 		local top = WorldMapFrame:GetCanvas():GetTop()
-		cursorX = (cursorX - left) / width * 100
-		cursorY = (top - cursorY) / height * 100
+		cursorX = max(min((cursorX - left) / width * 100, 100),0)
+		cursorY = max(min((top - cursorY) / height * 100, 100),0)
 		local worldmapCoordsText = "Cursor(X,Y): "..format("%.1f , %.1f    ", cursorX, cursorY)
 		-- Player position
 		if (not mapID) then
